@@ -68,7 +68,7 @@ function Index() {
             Each Mossling is felted, stitched, and coaxed into being by hand — one wildflower, one moonrise, one tiny cabin at a time.
           </p>
           <div className="flex flex-wrap gap-3">
-            <FuzzyButton surface="terra" as={Link as any} to="/gallery">Shop the Collection →</FuzzyButton>
+            <Link to="/gallery" className="fuzz-texture fluff-terra felt-terra text-cream stitched-cream rounded-full px-7 py-4 text-sm font-bold tracking-wide uppercase inline-flex items-center gap-2 puff-press">Shop the Collection →</Link>
             <FuzzyButton surface="cream">Read our story</FuzzyButton>
           </div>
         </div>
