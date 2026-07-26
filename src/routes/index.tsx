@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Plane, ArrowUpDown, Wifi, Bluetooth, Bell, Timer, Moon, Volume2,
-  Flashlight, Camera, Calculator, Flower2, ShoppingBag, Heart, Search,
+  Flashlight, Camera, Calculator, Flower2, Heart,
   Sparkles, Sun, Instagram,
 } from "lucide-react";
 import heroTote from "@/assets/hero-tote.jpg";
@@ -9,6 +9,9 @@ import productPouch from "@/assets/product-pouch.jpg";
 import productCoasters from "@/assets/product-coasters.jpg";
 import productOrnament from "@/assets/product-ornament.jpg";
 import productJournal from "@/assets/product-journal.jpg";
+import { SiteHeader } from "@/components/SiteHeader";
+import { Puff, FuzzyButton, type Surface } from "@/components/fuzzy";
+import { useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -29,49 +32,12 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-/* ---------- fuzzy primitives ---------- */
-
-type Surface = "cream" | "sage" | "terra" | "ink";
-const surfaceClass: Record<Surface, string> = {
-  cream: "felt-cream text-ink",
-  sage: "felt-sage text-cream",
-  terra: "felt-terra text-cream",
-  ink: "felt-ink text-cream",
-};
-const stitchClass: Record<Surface, string> = {
-  cream: "stitched",
-  sage: "stitched-cream",
-  terra: "stitched-cream",
-  ink: "stitched-cream",
-};
-
-function Puff({
-  children, surface = "cream", className = "", shape = "circle",
-}: { children?: React.ReactNode; surface?: Surface; className?: string; shape?: "circle" | "pill" | "square" }) {
-  const shapes = { circle: "rounded-full aspect-square", pill: "rounded-full", square: "rounded-[1.75rem] aspect-square" };
-  return (
-    <div className={`fuzz-texture fluff ${surfaceClass[surface]} ${shapes[shape]} ${stitchClass[surface]} flex items-center justify-center p-4 transition-transform duration-300 hover:-translate-y-1 ${className}`}>
-      {children}
-    </div>
-  );
-}
-
-function FuzzyButton({
-  children, surface = "sage", className = "", as: As = "button", ...rest
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & { surface?: Surface; as?: React.ElementType }) {
-  return (
-    <As
-      className={`fuzz-texture ${surface === "terra" ? "fluff-terra" : surface === "sage" ? "fluff-sage" : "fluff"} ${surfaceClass[surface]} ${stitchClass[surface]} rounded-full px-7 py-4 text-sm font-bold tracking-wide uppercase transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer inline-flex items-center gap-2 ${className}`}
-      {...rest}
-    >
-      {children}
-    </As>
-  );
-}
-
 function StatusChip({ icon: Icon, label, surface = "cream" }: { icon: React.ElementType; label: string; surface?: Surface }) {
+  const stitch = surface === "cream" ? "stitched" : "stitched-cream";
+  const felt = surface === "cream" ? "felt-cream text-ink" : surface === "sage" ? "felt-sage text-cream" : surface === "terra" ? "felt-terra text-cream" : "felt-ink text-cream";
+  const fluff = surface === "cream" ? "fluff" : surface === "sage" ? "fluff-sage" : surface === "terra" ? "fluff-terra" : "fluff-ink";
   return (
-    <div className={`fuzz-texture fluff ${surfaceClass[surface]} ${stitchClass[surface]} rounded-full pl-2 pr-5 py-2 flex items-center gap-3`}>
+    <div className={`fuzz-texture ${fluff} ${felt} ${stitch} rounded-full pl-2 pr-5 py-2 flex items-center gap-3 puff-press`}>
       <div className={`fuzz-texture ${surface === "cream" ? "felt-terra fluff-terra" : "felt-cream fluff"} rounded-full p-2.5`}>
         <Icon className="w-4 h-4" strokeWidth={2.5} />
       </div>
@@ -80,31 +46,11 @@ function StatusChip({ icon: Icon, label, surface = "cream" }: { icon: React.Elem
   );
 }
 
-/* ---------- page ---------- */
-
 function Index() {
+  const { add } = useCart();
   return (
     <div className="page-bg min-h-screen">
-      {/* NAV — a control-center strip */}
-      <header className="max-w-6xl mx-auto px-5 pt-6">
-        <div className="fuzz-texture fluff felt-cream stitched rounded-full px-4 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 pl-2">
-            <div className="fuzz-texture fluff-sage felt-sage rounded-full w-10 h-10 flex items-center justify-center">
-              <Flower2 className="w-5 h-5 text-cream" strokeWidth={2.5} />
-            </div>
-            <span className="font-display text-2xl tracking-tight">Mossling</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-1 text-xs font-extrabold uppercase tracking-widest">
-            {["Shop", "Journal", "Our Story", "Contact"].map((l) => (
-              <a key={l} href="#" className="px-4 py-2 rounded-full hover:bg-terra/10 transition-colors">{l}</a>
-            ))}
-          </nav>
-          <div className="flex items-center gap-2">
-            <Puff surface="cream" className="w-10 h-10 p-0"><Search className="w-4 h-4" strokeWidth={2.5} /></Puff>
-            <Puff surface="terra" className="w-10 h-10 p-0"><ShoppingBag className="w-4 h-4" strokeWidth={2.5} /></Puff>
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
       {/* HERO */}
       <section className="max-w-6xl mx-auto px-5 pt-16 pb-8 grid lg:grid-cols-[1.1fr_1fr] gap-10 items-center">
@@ -122,39 +68,33 @@ function Index() {
             Each Mossling is felted, stitched, and coaxed into being by hand — one wildflower, one moonrise, one tiny cabin at a time.
           </p>
           <div className="flex flex-wrap gap-3">
-            <FuzzyButton surface="terra">Shop the Collection →</FuzzyButton>
+            <FuzzyButton surface="terra" as={Link as any} to="/gallery">Shop the Collection →</FuzzyButton>
             <FuzzyButton surface="cream">Read our story</FuzzyButton>
           </div>
         </div>
 
-        {/* Hero tile grid — mimics the control-center panels */}
+        {/* Hero tile grid */}
         <div className="grid grid-cols-4 grid-rows-4 gap-4 aspect-square max-w-lg mx-auto">
-          {/* Big product tile */}
-          <div className="col-span-2 row-span-2 fuzz-texture fluff felt-cream rounded-[2rem] overflow-hidden p-3">
+          <div className="col-span-2 row-span-2 fuzz-texture fluff felt-cream rounded-[2rem] overflow-hidden p-3 puff-press">
             <img src={heroTote} alt="Felted wildflower tote" className="w-full h-full object-cover rounded-[1.5rem]" width={640} height={640} />
           </div>
-          {/* Quad control puff */}
           <div className="col-span-2 row-span-2 fuzz-texture fluff felt-cream rounded-[2rem] p-4 grid grid-cols-2 gap-3">
             <Puff surface="sage" className="p-0"><Plane className="w-6 h-6" strokeWidth={2.5} /></Puff>
             <Puff surface="terra" className="p-0"><ArrowUpDown className="w-6 h-6" strokeWidth={2.5} /></Puff>
             <Puff surface="terra" className="p-0"><Wifi className="w-6 h-6" strokeWidth={2.5} /></Puff>
             <Puff surface="sage" className="p-0"><Bluetooth className="w-6 h-6" strokeWidth={2.5} /></Puff>
           </div>
-          {/* pill "Do Not Disturb" */}
-          <div className="col-span-2 fuzz-texture fluff-sage felt-sage stitched-cream rounded-full px-5 flex items-center gap-3">
+          <div className="col-span-2 fuzz-texture fluff-sage felt-sage stitched-cream rounded-full px-5 flex items-center gap-3 puff-press">
             <div className="fuzz-texture fluff felt-cream rounded-full p-2"><Moon className="w-4 h-4 text-ink" strokeWidth={2.5} /></div>
             <span className="text-xs font-extrabold uppercase tracking-widest leading-tight">Slow Mode<br/><span className="opacity-80">On</span></span>
           </div>
-          {/* brightness pill */}
-          <div className="fuzz-texture fluff felt-cream rounded-full flex flex-col overflow-hidden">
+          <div className="fuzz-texture fluff felt-cream rounded-full flex flex-col overflow-hidden puff-press">
             <div className="flex-1 flex items-center justify-center"><Sun className="w-5 h-5" strokeWidth={2.5}/></div>
             <div className="flex-1 fuzz-texture felt-terra"></div>
           </div>
-          {/* volume pill */}
-          <div className="fuzz-texture fluff-sage felt-sage rounded-full flex items-center justify-center">
+          <div className="fuzz-texture fluff-sage felt-sage rounded-full flex items-center justify-center puff-press">
             <Volume2 className="w-5 h-5 text-cream" strokeWidth={2.5} />
           </div>
-          {/* small circles */}
           <Puff surface="terra" className="p-0"><Flashlight className="w-5 h-5" strokeWidth={2.5} /></Puff>
           <Puff surface="cream" className="p-0"><Timer className="w-5 h-5" strokeWidth={2.5} /></Puff>
           <Puff surface="sage" className="p-0"><Calculator className="w-5 h-5" strokeWidth={2.5} /></Puff>
@@ -182,16 +122,16 @@ function Index() {
       <section className="max-w-6xl mx-auto px-5 py-8">
         <div className="flex items-end justify-between mb-8">
           <h2 className="font-display text-5xl stitched">The Nest</h2>
-          <span className="text-xs font-extrabold uppercase tracking-widest text-muted-foreground">Featured · 4 pieces</span>
+          <Link to="/gallery" className="text-xs font-extrabold uppercase tracking-widest text-muted-foreground hover:text-terra">See the full nest →</Link>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { img: productPouch, title: "Wildflower Pouch", price: "$48", tag: "New", surface: "cream" as Surface },
-            { img: productCoasters, title: "Moonrise Coasters", price: "$36", tag: "Set of 4", surface: "cream" as Surface },
-            { img: productOrnament, title: "Cottage Ornament", price: "$52", tag: "Limited", surface: "cream" as Surface },
-            { img: productJournal, title: "Field Journal", price: "$64", tag: "Restocked", surface: "cream" as Surface },
+            { id: "pouch-wildflower", img: productPouch, title: "Wildflower Pouch", price: 48, tag: "New" },
+            { id: "coasters-moonrise", img: productCoasters, title: "Moonrise Coasters", price: 36, tag: "Set of 4" },
+            { id: "ornament-cottage", img: productOrnament, title: "Cottage Ornament", price: 52, tag: "Limited" },
+            { id: "journal-field", img: productJournal, title: "Field Journal", price: 64, tag: "Restocked" },
           ].map((p) => (
-            <article key={p.title} className="fuzz-texture fluff felt-cream rounded-[2rem] p-4 flex flex-col gap-4 transition-transform duration-300 hover:-translate-y-1">
+            <article key={p.title} className="fuzz-texture fluff felt-cream rounded-[2rem] p-4 flex flex-col gap-4 puff-press">
               <div className="rounded-[1.5rem] overflow-hidden aspect-square fuzz-texture">
                 <img src={p.img} alt={p.title} className="w-full h-full object-cover" width={512} height={512} loading="lazy" />
               </div>
@@ -202,8 +142,14 @@ function Index() {
               <div className="px-1">
                 <h3 className="font-display text-2xl stitched leading-tight">{p.title}</h3>
                 <div className="flex items-center justify-between mt-3">
-                  <span className="font-extrabold text-lg">{p.price}</span>
-                  <FuzzyButton surface="sage" className="px-5 py-2.5 text-xs">Add</FuzzyButton>
+                  <span className="font-extrabold text-lg">${p.price}</span>
+                  <FuzzyButton
+                    surface="sage"
+                    className="px-5 py-2.5 text-xs"
+                    onClick={() => add({ id: p.id, title: p.title, price: p.price, img: p.img })}
+                  >
+                    Add
+                  </FuzzyButton>
                 </div>
               </div>
             </article>
@@ -259,7 +205,10 @@ function Index() {
           <div>
             <p className="text-xs font-extrabold uppercase tracking-widest opacity-60 mb-3">Wander</p>
             <ul className="space-y-2 text-sm">
-              {["Shop all", "Made to order", "Care guide", "Gift cards"].map((l) => <li key={l}><a href="#" className="hover:text-terra">{l}</a></li>)}
+              <li><Link to="/gallery" className="hover:text-terra">Gallery</Link></li>
+              <li><a href="#" className="hover:text-terra">Made to order</a></li>
+              <li><a href="#" className="hover:text-terra">Care guide</a></li>
+              <li><a href="#" className="hover:text-terra">Gift cards</a></li>
             </ul>
           </div>
           <div>
