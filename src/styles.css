@@ -172,9 +172,9 @@
   border-radius: 1.75rem;
   padding: 1.25rem;
   transition: transform 300ms ease, box-shadow 300ms ease;
-}
-@utility tile:hover {
-  transform: translateY(-3px) rotate(-0.4deg);
+  &:hover {
+    transform: translateY(-3px) rotate(-0.4deg);
+  }
 }
 
 /* Page background — soft warm blur field like the references */
