@@ -99,53 +99,72 @@
 /* Fluffy fuzzy edge — layered box-shadows for the halo of hairs */
 @utility fluff {
   box-shadow:
-    0 0 0 1px oklch(from var(--cream) l c h / 0.5),
-    0 2px 0 -1px oklch(from currentColor l c h / 0.1),
-    0 0 12px 2px oklch(from var(--cream) l c h / 0.35),
-    0 0 22px 6px oklch(from var(--cream) l c h / 0.25),
-    0 0 40px 10px oklch(from var(--cream) l c h / 0.15),
-    0 10px 30px -8px oklch(from var(--ink) l c h / 0.25);
+    0 0 0 1px rgb(245 240 228 / 0.6),
+    0 0 12px 2px rgb(245 240 228 / 0.45),
+    0 0 24px 6px rgb(245 240 228 / 0.3),
+    0 0 42px 12px rgb(245 240 228 / 0.2),
+    0 10px 30px -8px rgb(70 55 40 / 0.3);
 }
 
 @utility fluff-sage {
   box-shadow:
-    0 0 0 1px oklch(from var(--sage-dark) l c h / 0.35),
-    0 0 10px 2px oklch(from var(--sage) l c h / 0.5),
-    0 0 22px 6px oklch(from var(--sage) l c h / 0.35),
-    0 0 40px 12px oklch(from var(--sage) l c h / 0.2),
-    0 12px 24px -8px oklch(from var(--sage-dark) l c h / 0.4);
+    0 0 0 1px rgb(90 110 85 / 0.4),
+    0 0 12px 2px rgb(140 165 135 / 0.6),
+    0 0 24px 8px rgb(140 165 135 / 0.4),
+    0 0 42px 14px rgb(140 165 135 / 0.22),
+    0 12px 26px -8px rgb(60 80 55 / 0.5);
 }
 
 @utility fluff-terra {
   box-shadow:
-    0 0 0 1px oklch(from var(--terra-dark) l c h / 0.4),
-    0 0 10px 2px oklch(from var(--terra) l c h / 0.55),
-    0 0 22px 6px oklch(from var(--terra) l c h / 0.35),
-    0 0 40px 12px oklch(from var(--terra) l c h / 0.18),
-    0 12px 24px -8px oklch(from var(--terra-dark) l c h / 0.45);
+    0 0 0 1px rgb(150 75 40 / 0.45),
+    0 0 12px 2px rgb(210 120 75 / 0.6),
+    0 0 24px 8px rgb(210 120 75 / 0.4),
+    0 0 42px 14px rgb(210 120 75 / 0.22),
+    0 12px 26px -8px rgb(115 55 25 / 0.5);
+}
+
+@utility fluff-ink {
+  box-shadow:
+    0 0 0 1px rgb(30 22 16 / 0.5),
+    0 0 14px 3px rgb(60 45 32 / 0.55),
+    0 0 28px 8px rgb(60 45 32 / 0.35),
+    0 12px 28px -8px rgb(20 15 10 / 0.55);
 }
 
 /* Embroidered text — dark thread with cream highlight */
 @utility stitched {
   text-shadow:
-    0 1px 0 oklch(from var(--cream) l c h / 0.7),
-    0 -1px 0 oklch(from var(--ink) l c h / 0.35),
-    1px 0 0 oklch(from var(--ink) l c h / 0.2),
-    0 2px 3px oklch(from var(--ink) l c h / 0.25);
+    0 1px 0 rgb(250 245 232 / 0.75),
+    0 -1px 0 rgb(60 45 30 / 0.35),
+    1px 1px 0 rgb(60 45 30 / 0.18),
+    0 2px 4px rgb(60 45 30 / 0.3);
 }
 
 @utility stitched-cream {
   text-shadow:
-    0 1px 0 oklch(from var(--sage-dark) l c h / 0.55),
-    0 -1px 0 oklch(from var(--cream) l c h / 0.8),
-    0 2px 3px oklch(from var(--sage-dark) l c h / 0.4);
+    0 1px 0 rgb(50 65 45 / 0.6),
+    0 -1px 0 rgb(250 245 232 / 0.35),
+    0 2px 4px rgb(25 35 20 / 0.5);
 }
 
-/* Backgrounds with subtle gradient like felt lit softly */
-@utility felt-cream { background: radial-gradient(120% 100% at 30% 20%, oklch(0.98 0.012 85), oklch(0.93 0.018 82)); }
-@utility felt-sage  { background: radial-gradient(120% 100% at 30% 20%, oklch(0.68 0.05 145), oklch(0.5 0.055 148)); color: var(--cream); }
-@utility felt-terra { background: radial-gradient(120% 100% at 30% 20%, oklch(0.68 0.14 48), oklch(0.5 0.14 42)); color: var(--cream); }
-@utility felt-ink   { background: radial-gradient(120% 100% at 30% 20%, oklch(0.34 0.02 60), oklch(0.22 0.02 60)); color: var(--cream); }
+/* Felt-colored backgrounds */
+@utility felt-cream {
+  background: radial-gradient(120% 100% at 30% 20%, #faf5e8, #ede2c8);
+  color: #3c2d1e;
+}
+@utility felt-sage {
+  background: radial-gradient(120% 100% at 30% 20%, #a8bb98, #6c8365);
+  color: #faf5e8;
+}
+@utility felt-terra {
+  background: radial-gradient(120% 100% at 30% 20%, #d68a5c, #a55830);
+  color: #faf5e8;
+}
+@utility felt-ink {
+  background: radial-gradient(120% 100% at 30% 20%, #4a3d2e, #2a2018);
+  color: #faf5e8;
+}
 
 /* Fuzzy tile — the reusable building block */
 @utility tile {
