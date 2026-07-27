@@ -1,11 +1,12 @@
-import { Column, Row, Text } from "@react-email/components";
+import { Link, Text } from "@react-email/components";
 import type { TemplateEntry } from "./registry";
 import {
+  DetailRow,
+  DetailTable,
   EmailLayout,
   PillButton,
   StatCard,
   brand,
-  doodle,
   styles,
 } from "./_layout";
 
@@ -17,6 +18,7 @@ interface PayoutSentProps {
   destination?: string;
   sentAt?: string;
   period?: string;
+  impressions?: string;
   dashboardUrl?: string;
 }
 
@@ -28,68 +30,50 @@ export default function PayoutSentEmail({
   destination = "+254 7•• ••• 421",
   sentAt = "14 Feb 2026, 09:15 EAT",
   period = "Jan 15 – Feb 14, 2026",
+  impressions = "184,220",
   dashboardUrl = "https://app.otexads.com/payouts",
 }: PayoutSentProps) {
   return (
     <EmailLayout
       preview={`Payout of ${amount} sent to ${destination}.`}
+      heading="Payout Sent"
       accent={brand.success}
-      eyebrow="payout sent"
       footerNote="You received this because a publisher payout was processed from your OtexAds account."
-      doodles={
-        <>
-          {doodle.checkCircle(brand.success)}
-          {doodle.arrowRight}
-          {doodle.spark}
-          {doodle.wave}
-        </>
-      }
-      hero={
-        <>
-          Money is on its{" "}
-          <span style={{ fontStyle: "italic", color: brand.success }}>
-            way.
-          </span>
-        </>
-      }
     >
-      <Text style={styles.lede}>
-        Nice work, {name}. Your OtexAds earnings for {period} are out the door.
-        M-Pesa usually lands in minutes; bank transfers within one business day.
+      <Text style={styles.greet}>Hi {name},</Text>
+
+      <Text style={styles.p}>
+        Your OtexAds publisher earnings for <strong>{period}</strong> have been
+        sent. M-Pesa transfers usually land in a few minutes; bank transfers
+        clear within one business day.
       </Text>
 
       <StatCard
-        label="amount sent"
+        label="Amount sent"
         value={amount}
         accent={brand.success}
-        soft={brand.successSoft}
       />
 
-      <Row>
-        <Column style={{ paddingBottom: 16, width: "50%" }}>
-          <Text style={styles.metaLabel}>Reference</Text>
-          <Text style={styles.meta}>{reference}</Text>
-        </Column>
-        <Column style={{ paddingBottom: 16, width: "50%" }}>
-          <Text style={styles.metaLabel}>Method</Text>
-          <Text style={styles.meta}>{method}</Text>
-        </Column>
-      </Row>
-      <Row>
-        <Column style={{ paddingBottom: 16, width: "50%" }}>
-          <Text style={styles.metaLabel}>Destination</Text>
-          <Text style={styles.meta}>{destination}</Text>
-        </Column>
-        <Column style={{ paddingBottom: 16, width: "50%" }}>
-          <Text style={styles.metaLabel}>Sent at</Text>
-          <Text style={styles.meta}>{sentAt}</Text>
-        </Column>
-      </Row>
+      <DetailTable>
+        <DetailRow label="Reference" value={reference} />
+        <DetailRow label="Method" value={method} />
+        <DetailRow label="Destination" value={destination} />
+        <DetailRow label="Earning period" value={period} />
+        <DetailRow label="Impressions served" value={impressions} />
+        <DetailRow label="Sent at" value={sentAt} />
+      </DetailTable>
 
-      <hr style={styles.hr} />
+      <Text style={styles.p}>
+        You can download the payout statement anytime from your{" "}
+        <Link href={dashboardUrl} style={styles.link}>
+          payouts page
+        </Link>
+        . If the money hasn't arrived within the expected window, reply to this
+        email and we'll trace it for you.
+      </Text>
 
-      <div style={{ textAlign: "center" }}>
-        <PillButton href={dashboardUrl} color={brand.success}>
+      <div style={{ textAlign: "center", margin: "28px 0 8px" }}>
+        <PillButton href={dashboardUrl} color={brand.ink}>
           View payout history
         </PillButton>
       </div>
@@ -109,6 +93,7 @@ export const template = {
     destination: "+254 7•• ••• 421",
     sentAt: "14 Feb 2026, 09:15 EAT",
     period: "Jan 15 – Feb 14, 2026",
+    impressions: "231,540",
     dashboardUrl: "https://app.otexads.com/payouts",
   },
 } satisfies TemplateEntry<PayoutSentProps>;

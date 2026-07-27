@@ -3,7 +3,9 @@ import {
   Container,
   Font,
   Head,
+  Hr,
   Html,
+  Img,
   Link,
   Preview,
   Section,
@@ -12,66 +14,67 @@ import {
 import type { CSSProperties, ReactNode } from "react";
 
 export const brand = {
-  paper: "#efece4",
-  paperDeep: "#e6e2d6",
-  ink: "#0e0e0c",
-  body: "#2a2a26",
-  muted: "#7a766c",
-  rule: "#d9d4c6",
-  accent: "#1d4ed8",
-  accentSoft: "#e6ecfb",
+  bg: "#ffffff",
+  ink: "#1a1a1a",
+  body: "#4a4a4a",
+  muted: "#8a8a8a",
+  rule: "#e6e6e6",
+  accent: "#f5b301", // warm yellow bar (Kid & Coe style)
+  link: "#2a6df4",
   success: "#0f6e4e",
-  successSoft: "#dff0e6",
-  warn: "#b8541b",
-  warnSoft: "#f7e6d5",
+  warn: "#c26a3a",
   danger: "#a4211a",
 } as const;
 
+// Hosted logo (absolute URL so it renders in email clients)
+export const LOGO_URL =
+  "https://id-preview--8c56b9ee-7f7c-435b-a676-225f651b661b.lovable.app/__l5e/assets-v1/bbe1ac96-ca15-4887-8458-308d335f4548/otexads-logo.png";
+
 const sans =
   "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
-const serif = "'Fraunces', 'Playfair Display', Georgia, 'Times New Roman', serif";
+const display =
+  "'Italiana', 'Cormorant Garamond', 'Playfair Display', Georgia, serif";
+const script = "'Dancing Script', 'Snell Roundhand', 'Segoe Script', cursive";
 
 interface LayoutProps {
   preview: string;
-  eyebrow?: string;
-  hero: ReactNode;
-  doodles?: ReactNode;
-  accent?: string;
+  heading: string; // large thin uppercase heading, e.g. "WELCOME!"
+  accent?: string; // color of the small bar under heading
   children: ReactNode;
+  signoff?: string; // cursive sign-off, defaults to "The OtexAds Team"
   footerNote?: string;
 }
 
 export function EmailLayout({
   preview,
-  eyebrow,
-  hero,
-  doodles,
-  accent = brand.ink,
+  heading,
+  accent = brand.accent,
   children,
+  signoff = "The OtexAds Team",
   footerNote,
 }: LayoutProps) {
   return (
     <Html lang="en" dir="ltr">
       <Head>
         <Font
-          fontFamily="Fraunces"
+          fontFamily="Italiana"
           fallbackFontFamily="Georgia"
           webFont={{
-            url: "https://fonts.gstatic.com/s/fraunces/v31/6NUh8FyLNQOQZAnv9ZwNjucMHVn85Ni7emAe9lKqZTnbB-gzTK0dwYI.woff2",
+            url: "https://fonts.gstatic.com/s/italiana/v17/QldNNTtLsx4E__B0XTmRY31Wx7Vv.woff2",
             format: "woff2",
           }}
-          fontWeight={700}
+          fontWeight={400}
           fontStyle="normal"
         />
         <Font
-          fontFamily="Fraunces"
-          fallbackFontFamily="Georgia"
+          fontFamily="Dancing Script"
+          fallbackFontFamily="cursive"
           webFont={{
-            url: "https://fonts.gstatic.com/s/fraunces/v31/6NUu8FyLNQOQZAnv9bYEvDiIdE9Ea92uemAk3sMxAJvVj4iFj-EIcw.woff2",
+            url: "https://fonts.gstatic.com/s/dancingscript/v25/If2cXTr6YS-zF4S-kcSWSVi_sxjsohD9F50Ruu7BMSo3Sup6.woff2",
             format: "woff2",
           }}
-          fontWeight={700}
-          fontStyle="italic"
+          fontWeight={600}
+          fontStyle="normal"
         />
         <Font
           fontFamily="Inter"
@@ -104,93 +107,96 @@ export function EmailLayout({
           color: brand.body,
         }}
       >
-        {/* outer paper canvas */}
         <Container
           style={{
-            backgroundColor: brand.paper,
-            maxWidth: "640px",
+            backgroundColor: "#ffffff",
+            maxWidth: "600px",
             margin: "0 auto",
-            padding: "48px 32px 40px",
+            padding: "48px 40px 32px",
           }}
         >
-          {/* scattered doodles zone */}
-          <Section style={{ textAlign: "center", padding: "8px 0 0" }}>
+          {/* Logo */}
+          <Section style={{ textAlign: "center", padding: "8px 0 40px" }}>
+            <Img
+              src={LOGO_URL}
+              alt="OtexAds"
+              width="140"
+              height="auto"
+              style={{
+                display: "inline-block",
+                margin: "0 auto",
+                maxWidth: "140px",
+                height: "auto",
+              }}
+            />
+          </Section>
+
+          {/* Thin display heading */}
+          <Section style={{ textAlign: "center", padding: "0 0 8px" }}>
             <Text
               style={{
                 margin: 0,
-                fontFamily: serif,
-                fontStyle: "italic",
-                fontWeight: 700,
-                fontSize: "28px",
+                fontFamily: display,
+                fontWeight: 400,
+                fontSize: "56px",
+                lineHeight: 1.05,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
                 color: brand.ink,
-                letterSpacing: "-0.02em",
               }}
             >
-              otex<span style={{ color: accent }}>·</span>ads
+              {heading}
             </Text>
-          </Section>
-
-          {doodles ? (
-            <Section style={{ padding: "36px 0 4px", textAlign: "center" }}>
-              {doodles}
-            </Section>
-          ) : (
-            <Section style={{ height: 32 }} />
-          )}
-
-          {/* Hero headline */}
-          <Section style={{ padding: "8px 0 28px", textAlign: "center" }}>
-            {eyebrow ? (
-              <Text
-                style={{
-                  margin: "0 0 14px",
-                  fontSize: "11px",
-                  fontWeight: 600,
-                  letterSpacing: "0.22em",
-                  textTransform: "uppercase",
-                  color: brand.muted,
-                }}
-              >
-                {eyebrow}
-              </Text>
-            ) : null}
+            {/* accent bar */}
             <div
               style={{
-                fontFamily: serif,
-                fontWeight: 700,
-                fontSize: "60px",
-                lineHeight: 1.02,
-                letterSpacing: "-0.035em",
-                color: brand.ink,
+                width: "42px",
+                height: "3px",
+                backgroundColor: accent,
+                margin: "22px auto 0",
+                borderRadius: "2px",
               }}
-            >
-              {hero}
-            </div>
+            />
           </Section>
 
           {/* Body */}
-          <Section style={{ padding: "8px 8px 12px" }}>{children}</Section>
+          <Section style={{ padding: "40px 4px 0" }}>{children}</Section>
 
-          {/* Footer */}
-          <Section style={{ padding: "40px 0 0", textAlign: "center" }}>
-            <Text
-              style={{
-                margin: "0 0 10px",
-                fontFamily: serif,
-                fontStyle: "italic",
-                fontWeight: 700,
-                fontSize: "18px",
-                color: brand.ink,
-              }}
-            >
-              — the otexads team
+          {/* Sign-off */}
+          <Section style={{ padding: "36px 4px 0" }}>
+            <Text style={{ ...styles.p, margin: "0 0 6px", color: brand.body }}>
+              Cheers,
             </Text>
             <Text
               style={{
-                margin: "6px 0 0",
+                margin: 0,
+                fontFamily: script,
+                fontSize: "24px",
+                color: brand.ink,
+                fontWeight: 600,
+              }}
+            >
+              {signoff}
+            </Text>
+          </Section>
+
+          <Hr
+            style={{
+              border: "none",
+              borderTop: `1px solid ${brand.rule}`,
+              margin: "40px 0 24px",
+            }}
+          />
+
+          {/* Footer */}
+          <Section style={{ textAlign: "center", padding: "0 0 8px" }}>
+            <Text
+              style={{
+                margin: "0 0 8px",
                 fontSize: "12px",
                 lineHeight: 1.6,
                 color: brand.muted,
+                fontFamily: sans,
               }}
             >
               {footerNote ??
@@ -198,22 +204,43 @@ export function EmailLayout({
             </Text>
             <Text
               style={{
-                margin: "6px 0 0",
+                margin: 0,
                 fontSize: "12px",
-                lineHeight: 1.6,
+                lineHeight: 1.7,
                 color: brand.muted,
+                fontFamily: sans,
               }}
             >
-              OtexAds ·{" "}
+              OtexAds Limited
+              <br />
+              Westlands Office Park, Waiyaki Way
+              <br />
+              Nairobi, Kenya
+            </Text>
+            <Text
+              style={{
+                margin: "12px 0 0",
+                fontSize: "12px",
+                color: brand.muted,
+                fontFamily: sans,
+              }}
+            >
               <Link href="https://otexads.com" style={{ color: brand.muted }}>
                 otexads.com
-              </Link>{" "}
-              ·{" "}
+              </Link>
+              {"  ·  "}
               <Link
                 href="https://otexads.com/support"
                 style={{ color: brand.muted }}
               >
                 support
+              </Link>
+              {"  ·  "}
+              <Link
+                href="https://otexads.com/privacy"
+                style={{ color: brand.muted }}
+              >
+                privacy
               </Link>
             </Text>
           </Section>
@@ -226,26 +253,35 @@ export function EmailLayout({
 /* ---------- shared building blocks ---------- */
 
 export const styles = {
-  serif,
+  display,
   sans,
+  script,
   p: {
-    margin: "0 0 18px",
-    fontSize: "16px",
-    lineHeight: 1.6,
+    margin: "0 0 16px",
+    fontSize: "15px",
+    lineHeight: 1.7,
     color: brand.body,
     fontFamily: sans,
   } as CSSProperties,
   lede: {
-    margin: "0 0 22px",
-    fontSize: "17px",
-    lineHeight: 1.55,
+    margin: "0 0 18px",
+    fontSize: "15px",
+    lineHeight: 1.7,
     color: brand.ink,
     fontFamily: sans,
+  } as CSSProperties,
+  greet: {
+    margin: "0 0 14px",
+    fontSize: "16px",
+    lineHeight: 1.6,
+    color: brand.ink,
+    fontFamily: sans,
+    fontWeight: 600,
   } as CSSProperties,
   meta: {
     margin: 0,
     fontSize: "13px",
-    lineHeight: 1.55,
+    lineHeight: 1.6,
     color: brand.body,
     fontFamily: sans,
   } as CSSProperties,
@@ -260,17 +296,21 @@ export const styles = {
   } as CSSProperties,
   amount: {
     margin: 0,
-    fontFamily: serif,
-    fontWeight: 700,
-    fontSize: "38px",
-    letterSpacing: "-0.02em",
+    fontFamily: display,
+    fontWeight: 400,
+    fontSize: "34px",
+    letterSpacing: "0.02em",
     color: brand.ink,
-    lineHeight: 1,
+    lineHeight: 1.1,
   } as CSSProperties,
   hr: {
     border: "none",
     borderTop: `1px solid ${brand.rule}`,
     margin: "28px 0",
+  } as CSSProperties,
+  link: {
+    color: brand.link,
+    textDecoration: "underline",
   } as CSSProperties,
 };
 
@@ -293,11 +333,12 @@ export function PillButton({
       style={{
         backgroundColor: color,
         color: textColor,
-        borderRadius: "999px",
-        padding: "18px 44px",
-        fontSize: "15px",
+        borderRadius: "4px",
+        padding: "14px 34px",
+        fontSize: "13px",
         fontWeight: 600,
-        letterSpacing: "0.01em",
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
         textDecoration: "none",
         display: "inline-block",
         fontFamily: sans,
@@ -312,24 +353,22 @@ interface StatCardProps {
   label: string;
   value: string;
   accent?: string;
-  soft?: string;
 }
 
 export function StatCard({
   label,
   value,
   accent = brand.ink,
-  soft = brand.paperDeep,
 }: StatCardProps) {
   return (
     <div
       style={{
-        backgroundColor: soft,
         border: `1px solid ${brand.rule}`,
-        borderRadius: "18px",
-        padding: "22px 24px",
-        margin: "8px 0 24px",
-        textAlign: "center",
+        borderLeft: `3px solid ${accent}`,
+        borderRadius: "3px",
+        padding: "20px 24px",
+        margin: "12px 0 24px",
+        backgroundColor: "#fafafa",
       }}
     >
       <div
@@ -338,8 +377,8 @@ export function StatCard({
           fontWeight: 600,
           letterSpacing: "0.18em",
           textTransform: "uppercase",
-          color: accent,
-          marginBottom: "10px",
+          color: brand.muted,
+          marginBottom: "8px",
           fontFamily: sans,
         }}
       >
@@ -347,12 +386,12 @@ export function StatCard({
       </div>
       <div
         style={{
-          fontFamily: serif,
-          fontWeight: 700,
-          fontSize: "42px",
-          letterSpacing: "-0.03em",
+          fontFamily: display,
+          fontWeight: 400,
+          fontSize: "34px",
+          letterSpacing: "0.01em",
           color: brand.ink,
-          lineHeight: 1,
+          lineHeight: 1.1,
         }}
       >
         {value}
@@ -361,109 +400,54 @@ export function StatCard({
   );
 }
 
-/* Minimal inline SVG doodles — scattered above the hero */
+interface DetailRowProps {
+  label: string;
+  value: ReactNode;
+}
 
-const doodleWrap: CSSProperties = {
-  display: "inline-block",
-  margin: "0 10px",
-  verticalAlign: "middle",
-};
+export function DetailRow({ label, value }: DetailRowProps) {
+  return (
+    <tr>
+      <td
+        style={{
+          padding: "10px 0",
+          borderBottom: `1px solid ${brand.rule}`,
+          fontSize: "12px",
+          fontWeight: 600,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: brand.muted,
+          fontFamily: sans,
+          width: "40%",
+        }}
+      >
+        {label}
+      </td>
+      <td
+        style={{
+          padding: "10px 0",
+          borderBottom: `1px solid ${brand.rule}`,
+          fontSize: "14px",
+          color: brand.ink,
+          fontFamily: sans,
+          textAlign: "right",
+        }}
+      >
+        {value}
+      </td>
+    </tr>
+  );
+}
 
-export const doodle = {
-  arrowSW: (
-    <span style={doodleWrap}>
-      <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-        <path d="M20 4 L6 20 M6 12 L6 20 L14 20" stroke="#0e0e0c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </span>
-  ),
-  arrowRight: (
-    <span style={doodleWrap}>
-      <svg width="28" height="14" viewBox="0 0 28 14" fill="none">
-        <path d="M2 7 L26 7 M20 2 L26 7 L20 12" stroke="#0e0e0c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </span>
-  ),
-  arrowLeft: (
-    <span style={doodleWrap}>
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <path d="M12 7 L2 7 M7 2 L2 7 L7 12" stroke="#0e0e0c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </span>
-  ),
-  dot: (
-    <span style={doodleWrap}>
-      <svg width="14" height="14" viewBox="0 0 14 14">
-        <circle cx="7" cy="7" r="5" fill="#0e0e0c" />
-      </svg>
-    </span>
-  ),
-  spark: (
-    <span style={doodleWrap}>
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M10 1 L11.5 8.5 L19 10 L11.5 11.5 L10 19 L8.5 11.5 L1 10 L8.5 8.5 Z" fill="#0e0e0c" />
-      </svg>
-    </span>
-  ),
-  cursor: (
-    <span style={doodleWrap}>
-      <svg width="18" height="20" viewBox="0 0 18 20" fill="none">
-        <path d="M2 2 L2 16 L6 12 L9 18 L11 17 L8 11 L14 11 Z" fill="#0e0e0c" />
-      </svg>
-    </span>
-  ),
-  coin: (color = "#0e0e0c") => (
-    <span style={doodleWrap}>
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <circle cx="11" cy="11" r="9" stroke={color} strokeWidth="2" />
-        <path d="M11 6 L11 16 M8 9 L14 9 M8 13 L14 13" stroke={color} strokeWidth="2" strokeLinecap="round" />
-      </svg>
-    </span>
-  ),
-  bell: (color = "#0e0e0c") => (
-    <span style={doodleWrap}>
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <path d="M11 3 C7 3 5 6 5 10 L5 14 L3 17 L19 17 L17 14 L17 10 C17 6 15 3 11 3 Z M9 19 C9 20.5 10 21 11 21 C12 21 13 20.5 13 19" stroke={color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" fill="none" />
-      </svg>
-    </span>
-  ),
-  lock: (
-    <span style={doodleWrap}>
-      <svg width="20" height="22" viewBox="0 0 20 22" fill="none">
-        <rect x="3" y="10" width="14" height="10" rx="2" stroke="#0e0e0c" strokeWidth="2" />
-        <path d="M6 10 V7 A4 4 0 0 1 14 7 V10" stroke="#0e0e0c" strokeWidth="2" />
-      </svg>
-    </span>
-  ),
-  envelope: (
-    <span style={doodleWrap}>
-      <svg width="26" height="20" viewBox="0 0 26 20" fill="none">
-        <rect x="2" y="2" width="22" height="16" rx="2" stroke="#0e0e0c" strokeWidth="2" />
-        <path d="M2 4 L13 12 L24 4" stroke="#0e0e0c" strokeWidth="2" strokeLinejoin="round" />
-      </svg>
-    </span>
-  ),
-  wave: (
-    <span style={doodleWrap}>
-      <svg width="40" height="14" viewBox="0 0 40 14" fill="none">
-        <path d="M2 7 Q7 1 12 7 T22 7 T32 7 T42 7" stroke="#0e0e0c" strokeWidth="2" fill="none" strokeLinecap="round" />
-      </svg>
-    </span>
-  ),
-  checkCircle: (color = "#0f6e4e") => (
-    <span style={doodleWrap}>
-      <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-        <circle cx="13" cy="13" r="11" stroke={color} strokeWidth="2" />
-        <path d="M7 13 L11 17 L19 9" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      </svg>
-    </span>
-  ),
-  warnTri: (color = "#b8541b") => (
-    <span style={doodleWrap}>
-      <svg width="26" height="24" viewBox="0 0 26 24" fill="none">
-        <path d="M13 2 L25 22 L1 22 Z" stroke={color} strokeWidth="2" strokeLinejoin="round" fill="none" />
-        <path d="M13 9 L13 15 M13 18 L13 19" stroke={color} strokeWidth="2.5" strokeLinecap="round" />
-      </svg>
-    </span>
-  ),
-};
+export function DetailTable({ children }: { children: ReactNode }) {
+  return (
+    <table
+      cellPadding={0}
+      cellSpacing={0}
+      width="100%"
+      style={{ borderCollapse: "collapse", margin: "8px 0 8px" }}
+    >
+      <tbody>{children}</tbody>
+    </table>
+  );
+}

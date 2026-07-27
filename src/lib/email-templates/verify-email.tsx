@@ -1,74 +1,48 @@
-import { Text } from "@react-email/components";
+import { Link, Text } from "@react-email/components";
 import type { TemplateEntry } from "./registry";
-import { EmailLayout, PillButton, brand, doodle, styles } from "./_layout";
+import { EmailLayout, PillButton, brand, styles } from "./_layout";
 
 interface VerifyEmailProps {
+  name?: string;
   verifyUrl?: string;
   expiresIn?: string;
 }
 
 export default function VerifyEmail({
+  name = "there",
   verifyUrl = "https://app.otexads.com/verify?token=xxx",
   expiresIn = "24 hours",
 }: VerifyEmailProps) {
   return (
     <EmailLayout
       preview="Confirm your OtexAds email address."
+      heading="Confirm Email"
       accent={brand.accent}
-      eyebrow="one tap"
-      doodles={
-        <>
-          {doodle.envelope}
-          {doodle.arrowSW}
-          {doodle.dot}
-          {doodle.spark}
-        </>
-      }
-      hero={
-        <>
-          Is this{" "}
-          <span style={{ fontStyle: "italic", color: brand.accent }}>
-            really
-          </span>{" "}
-          you?
-        </>
-      }
     >
-      <Text style={styles.lede}>
-        Tap the button to confirm your email and unlock your OtexAds account.
-        The link expires in {expiresIn}, so don't leave it in the tab pile.
+      <Text style={styles.greet}>Hi {name},</Text>
+
+      <Text style={styles.p}>
+        Thanks for signing up. Please confirm this is your email address by
+        clicking the button below. The link is valid for {expiresIn}.
       </Text>
 
-      <div style={{ textAlign: "center", margin: "36px 0 12px" }}>
-        <PillButton href={verifyUrl} color={brand.accent}>
+      <div style={{ textAlign: "center", margin: "32px 0 24px" }}>
+        <PillButton href={verifyUrl} color={brand.ink}>
           Confirm email
         </PillButton>
       </div>
 
-      <Text
-        style={{
-          ...styles.meta,
-          wordBreak: "break-all",
-          textAlign: "center",
-          marginTop: 22,
-          color: brand.muted,
-        }}
-      >
-        Button shy? Paste this into your browser:
+      <Text style={styles.p}>
+        If the button doesn't work, paste this link into your browser:
         <br />
-        <span style={{ color: brand.accent }}>{verifyUrl}</span>
+        <Link href={verifyUrl} style={{ ...styles.link, wordBreak: "break-all" }}>
+          {verifyUrl}
+        </Link>
       </Text>
 
-      <Text
-        style={{
-          ...styles.p,
-          marginTop: 26,
-          color: brand.muted,
-          fontSize: 13,
-          textAlign: "center",
-        }}
-      >
-        Didn't sign up? Ignore this — nothing happens.
+      <Text style={{ ...styles.p, color: brand.muted, fontSize: 13 }}>
+        Didn't create an OtexAds account? You can safely ignore this email —
+        nothing will happen.
       </Text>
     </EmailLayout>
   );
@@ -79,6 +53,7 @@ export const template = {
   subject: "Confirm your OtexAds email",
   displayName: "Verify Email",
   previewData: {
+    name: "Aisha",
     verifyUrl: "https://app.otexads.com/verify?token=abc123",
     expiresIn: "24 hours",
   },
