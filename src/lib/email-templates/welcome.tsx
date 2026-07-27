@@ -1,124 +1,52 @@
-import {
-  Body,
-  Button,
-  Container,
-  Head,
-  Heading,
-  Html,
-  Preview,
-  Section,
-  Text,
-} from "@react-email/components";
+import { Button, Section, Text } from "@react-email/components";
 import type { TemplateEntry } from "./registry";
+import { EmailLayout, brand, styles } from "./_layout";
 
 interface WelcomeProps {
   name?: string;
-  ctaUrl?: string;
+  role?: "advertiser" | "publisher";
+  dashboardUrl?: string;
 }
 
-const cream = "#f6f4ef";
-const sage = "#7a8a6a";
-const terra = "#c26a3a";
-const ink = "#3a3a3a";
+export default function WelcomeEmail({
+  name = "there",
+  role = "advertiser",
+  dashboardUrl = "https://app.otexads.com",
+}: WelcomeProps) {
+  const roleCopy =
+    role === "publisher"
+      ? "Add your first ad slot, generate your tag, and start earning from day one."
+      : "Fund your wallet, launch your first campaign, and reach quality publishers instantly.";
 
-export default function WelcomeEmail({ name = "friend", ctaUrl = "#" }: WelcomeProps) {
   return (
-    <Html lang="en" dir="ltr">
-      <Head />
-      <Preview>Welcome to Mossling — your cozy corner starts here.</Preview>
-      <Body style={{ backgroundColor: cream, margin: 0, padding: 0, fontFamily: "Georgia, serif" }}>
-        <Container
-          style={{
-            backgroundColor: "#ffffff",
-            borderRadius: "24px",
-            margin: "32px auto",
-            maxWidth: "520px",
-            padding: "40px",
-            border: `2px solid ${sage}20`,
-          }}
-        >
-          <Section style={{ textAlign: "center", marginBottom: "24px" }}>
-            <Text
-              style={{
-                color: terra,
-                fontSize: "14px",
-                fontWeight: 700,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                margin: 0,
-              }}
-            >
-              Mossling Studio
-            </Text>
-          </Section>
+    <EmailLayout preview={`Welcome to OtexAds, ${name}.`}>
+      <Text style={styles.eyebrow}>Welcome</Text>
+      <Text style={styles.h1}>You're in, {name}.</Text>
+      <Text style={styles.p}>
+        OtexAds connects advertisers with quality publishers — clean tracking,
+        transparent payouts, no middleman noise. {roleCopy}
+      </Text>
 
-          <Heading
-            as="h1"
-            style={{
-              color: ink,
-              fontSize: "32px",
-              fontWeight: 500,
-              lineHeight: 1.15,
-              margin: "0 0 20px",
-              textAlign: "center",
-            }}
-          >
-            Softer than a snowfall, {name}.
-          </Heading>
+      <Section style={{ margin: "28px 0 8px" }}>
+        <Button href={dashboardUrl} style={styles.button()}>
+          Open your dashboard
+        </Button>
+      </Section>
 
-          <Text
-            style={{
-              color: ink,
-              fontSize: "16px",
-              lineHeight: 1.6,
-              margin: "0 0 24px",
-              textAlign: "center",
-            }}
-          >
-            Welcome to the studio. You&apos;ll be the first to know about new wildflower
-            totes, tiny cabin ornaments, and the occasional hand-stitched secret.
-          </Text>
-
-          <Section style={{ textAlign: "center", margin: "32px 0" }}>
-            <Button
-              href={ctaUrl}
-              style={{
-                backgroundColor: sage,
-                color: "#ffffff",
-                borderRadius: "999px",
-                padding: "14px 28px",
-                fontSize: "14px",
-                fontWeight: 700,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                textDecoration: "none",
-                display: "inline-block",
-              }}
-            >
-              Explore the Collection
-            </Button>
-          </Section>
-
-          <Text
-            style={{
-              color: "#6b6b6b",
-              fontSize: "13px",
-              lineHeight: 1.5,
-              margin: "24px 0 0",
-              textAlign: "center",
-            }}
-          >
-            If you didn&apos;t sign up for Mossling emails, you can safely ignore this message.
-          </Text>
-        </Container>
-      </Body>
-    </Html>
+      <Text style={{ ...styles.p, marginTop: 24, color: brand.muted, fontSize: 13 }}>
+        Questions? Just reply to this email — a real human on our team will read it.
+      </Text>
+    </EmailLayout>
   );
 }
 
 export const template = {
   component: WelcomeEmail,
-  subject: "Welcome to Mossling — your cozy corner starts here",
+  subject: "Welcome to OtexAds",
   displayName: "Welcome",
-  previewData: { name: "Aisha", ctaUrl: "https://mossling.studio/gallery" },
+  previewData: {
+    name: "Aisha",
+    role: "advertiser",
+    dashboardUrl: "https://app.otexads.com",
+  },
 } satisfies TemplateEntry<WelcomeProps>;

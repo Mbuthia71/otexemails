@@ -1,78 +1,117 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { renderEmail } from "@/lib/email-templates/email.functions";
-import type { TemplateName } from "@/lib/email-templates/registry";
+import { TEMPLATES, type TemplateName } from "@/lib/email-templates/registry";
 
 export const Route = createFileRoute("/email-preview")({
   component: EmailPreview,
   head: () => ({
     meta: [
-      { title: "Email Preview — Mossling" },
-      { name: "description", content: "Preview rendered email templates" },
-      { property: "og:title", content: "Email Preview — Mossling" },
-      { property: "og:description", content: "Preview rendered email templates" },
+      { title: "OtexAds — Email Template Studio" },
+      { name: "description", content: "Preview OtexAds transactional email templates." },
+      { property: "og:title", content: "OtexAds — Email Template Studio" },
+      { property: "og:description", content: "Preview OtexAds transactional email templates." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
   }),
 });
 
-const templates: { name: TemplateName; label: string }[] = [
-  { name: "welcome", label: "Welcome" },
-  { name: "order-confirmation", label: "Order Confirmation" },
-  { name: "password-reset", label: "Password Reset" },
-];
+const templateList = (Object.keys(TEMPLATES) as TemplateName[]).map((name) => ({
+  name,
+  label: TEMPLATES[name].displayName ?? name,
+  subject: TEMPLATES[name].subject,
+}));
 
 function EmailPreview() {
-  const [html, setHtml] = useState<Record<TemplateName, string>>({
-    welcome: "",
-    "order-confirmation": "",
-    "password-reset": "",
-  });
+  const [active, setActive] = useState<TemplateName>("welcome");
+  const [html, setHtml] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
-  const load = async (name: TemplateName) => {
-    const { html: rendered } = await renderEmail({
-      data: { template: name, data: {} },
-    });
-    setHtml((prev) => ({ ...prev, [name]: rendered }));
-  };
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    renderEmail({ data: { template: active, data: {} } })
+      .then((res) => {
+        if (!cancelled) setHtml(res.html);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [active]);
+
+  const activeMeta = TEMPLATES[active];
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <h1 className="font-display text-4xl mb-2">Email Preview</h1>
-      <p className="text-ink/70 mb-8 max-w-xl">
-        Click a template to render it. The public render endpoint is{" "}
-        <code className="bg-cream px-1.5 py-0.5 rounded-lg text-sm font-mono">
-          POST /api/public/email/render
-        </code>
-        .
-      </p>
-
-      <div className="grid gap-10">
-        {templates.map((t) => (
-          <section key={t.name} className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold">{t.label}</h2>
+    <div className="min-h-screen bg-zinc-50 text-zinc-900">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[260px_1fr] gap-6 p-6">
+        <aside className="space-y-1">
+          <div className="mb-4">
+            <h1 className="text-lg font-bold tracking-tight">otexads</h1>
+            <p className="text-xs text-zinc-500 mt-0.5">Email template studio</p>
+          </div>
+          {templateList.map((t) => {
+            const isActive = active === t.name;
+            return (
               <button
-                onClick={() => load(t.name)}
-                className="text-sm font-bold uppercase tracking-wide text-sage hover:text-sage-dark transition-colors"
+                key={t.name}
+                onClick={() => setActive(t.name)}
+                className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                  isActive
+                    ? "bg-zinc-900 text-white"
+                    : "hover:bg-zinc-200/60 text-zinc-700"
+                }`}
               >
-                Render {t.label}
+                <div className="font-medium">{t.label}</div>
+                <div
+                  className={`text-xs mt-0.5 truncate ${
+                    isActive ? "text-zinc-300" : "text-zinc-500"
+                  }`}
+                >
+                  {t.name}
+                </div>
               </button>
+            );
+          })}
+          <div className="pt-6 mt-6 border-t border-zinc-200 text-xs text-zinc-500 space-y-2">
+            <div className="font-semibold text-zinc-700">Render endpoint</div>
+            <code className="block bg-white border border-zinc-200 rounded px-2 py-1.5 font-mono text-[11px] leading-tight break-all">
+              POST /api/public/email/render
+            </code>
+            <div>Body: {"{ template, data }"} → HTML</div>
+          </div>
+        </aside>
+
+        <main className="space-y-4">
+          <div className="flex items-baseline justify-between">
+            <div>
+              <div className="text-xs uppercase tracking-wider text-zinc-500">
+                Subject
+              </div>
+              <h2 className="text-xl font-semibold mt-0.5">{activeMeta.subject}</h2>
             </div>
-            {html[t.name] ? (
+            {loading ? (
+              <span className="text-xs text-zinc-500">Rendering…</span>
+            ) : null}
+          </div>
+
+          <div className="rounded-xl border border-zinc-200 bg-white overflow-hidden">
+            {html ? (
               <iframe
-                srcDoc={html[t.name]}
-                className="w-full h-[520px] border-2 border-border rounded-2xl bg-white"
-                title={t.label}
+                srcDoc={html}
+                className="w-full h-[820px] bg-white"
+                title={active}
               />
             ) : (
-              <div className="w-full h-[520px] border-2 border-dashed border-border rounded-2xl flex items-center justify-center text-ink/50">
-                Click “Render {t.label}” to preview
+              <div className="w-full h-[820px] flex items-center justify-center text-zinc-400 text-sm">
+                Loading preview…
               </div>
             )}
-          </section>
-        ))}
+          </div>
+        </main>
       </div>
     </div>
   );

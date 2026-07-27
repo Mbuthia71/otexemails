@@ -2,8 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { renderTemplate, type TemplateName } from "@/lib/email-templates/render";
 
+const templateNames = [
+  "welcome",
+  "verify-email",
+  "password-reset",
+  "deposit-confirmation",
+  "low-balance",
+  "payout-sent",
+  "payout-pending-approval",
+] as const;
+
 const bodySchema = z.object({
-  template: z.enum(["welcome", "order-confirmation", "password-reset"]),
+  template: z.enum(templateNames),
   data: z.record(z.unknown()).default({}),
 });
 
