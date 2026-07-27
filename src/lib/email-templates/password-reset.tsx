@@ -1,142 +1,59 @@
-import {
-  Body,
-  Button,
-  Container,
-  Head,
-  Heading,
-  Html,
-  Preview,
-  Section,
-  Text,
-} from "@react-email/components";
+import { Button, Section, Text } from "@react-email/components";
 import type { TemplateEntry } from "./registry";
+import { EmailLayout, brand, styles } from "./_layout";
 
 interface PasswordResetProps {
   resetUrl?: string;
   expiresIn?: string;
+  ipAddress?: string;
 }
 
-const cream = "#f6f4ef";
-const sage = "#7a8a6a";
-const terra = "#c26a3a";
-const ink = "#3a3a3a";
-
 export default function PasswordResetEmail({
-  resetUrl = "#",
+  resetUrl = "https://app.otexads.com/reset?token=xxx",
   expiresIn = "1 hour",
+  ipAddress,
 }: PasswordResetProps) {
   return (
-    <Html lang="en" dir="ltr">
-      <Head />
-      <Preview>Reset your Mossling password.</Preview>
-      <Body style={{ backgroundColor: cream, margin: 0, padding: 0, fontFamily: "Georgia, serif" }}>
-        <Container
-          style={{
-            backgroundColor: "#ffffff",
-            borderRadius: "24px",
-            margin: "32px auto",
-            maxWidth: "520px",
-            padding: "40px",
-            border: `2px solid ${sage}20`,
-          }}
-        >
-          <Section style={{ textAlign: "center", marginBottom: "24px" }}>
-            <Text
-              style={{
-                color: terra,
-                fontSize: "14px",
-                fontWeight: 700,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                margin: 0,
-              }}
-            >
-              Password Reset
-            </Text>
-          </Section>
+    <EmailLayout preview="Reset your OtexAds password.">
+      <Text style={styles.eyebrow}>Password reset</Text>
+      <Text style={styles.h1}>Reset your password</Text>
+      <Text style={styles.p}>
+        We received a request to reset your OtexAds password. Click the button
+        below to choose a new one. This link expires in {expiresIn}.
+      </Text>
 
-          <Heading
-            as="h1"
-            style={{
-              color: ink,
-              fontSize: "28px",
-              fontWeight: 500,
-              lineHeight: 1.2,
-              margin: "0 0 16px",
-              textAlign: "center",
-            }}
-          >
-            Let&apos;s get you back in.
-          </Heading>
+      <Section style={{ margin: "28px 0" }}>
+        <Button href={resetUrl} style={styles.button()}>
+          Reset password
+        </Button>
+      </Section>
 
-          <Text
-            style={{
-              color: ink,
-              fontSize: "16px",
-              lineHeight: 1.6,
-              margin: "0 0 24px",
-              textAlign: "center",
-            }}
-          >
-            Click the button below to reset your password. This link expires in {expiresIn}.
-          </Text>
+      <Text style={{ ...styles.meta, wordBreak: "break-all" }}>
+        Or paste this URL into your browser:
+        <br />
+        <span style={{ color: brand.accent }}>{resetUrl}</span>
+      </Text>
 
-          <Section style={{ textAlign: "center", margin: "32px 0" }}>
-            <Button
-              href={resetUrl}
-              style={{
-                backgroundColor: terra,
-                color: "#ffffff",
-                borderRadius: "999px",
-                padding: "14px 28px",
-                fontSize: "14px",
-                fontWeight: 700,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                textDecoration: "none",
-                display: "inline-block",
-              }}
-            >
-              Reset Password
-            </Button>
-          </Section>
+      {ipAddress ? (
+        <Text style={{ ...styles.meta, marginTop: 20 }}>
+          Request originated from IP <strong>{ipAddress}</strong>.
+        </Text>
+      ) : null}
 
-          <Text
-            style={{
-              color: "#6b6b6b",
-              fontSize: "13px",
-              lineHeight: 1.5,
-              margin: "24px 0 0",
-              textAlign: "center",
-              wordBreak: "break-all",
-            }}
-          >
-            Or paste this URL into your browser: {resetUrl}
-          </Text>
-
-          <Text
-            style={{
-              color: "#6b6b6b",
-              fontSize: "13px",
-              lineHeight: 1.5,
-              margin: "24px 0 0",
-              textAlign: "center",
-            }}
-          >
-            If you didn&apos;t request a reset, you can ignore this email.
-          </Text>
-        </Container>
-      </Body>
-    </Html>
+      <Text style={{ ...styles.p, marginTop: 24, color: brand.muted, fontSize: 13 }}>
+        Didn't request this? Ignore this email — your password won't change.
+      </Text>
+    </EmailLayout>
   );
 }
 
 export const template = {
   component: PasswordResetEmail,
-  subject: "Reset your Mossling password",
+  subject: "Reset your OtexAds password",
   displayName: "Password Reset",
   previewData: {
-    resetUrl: "https://mossling.studio/reset?token=abc123",
+    resetUrl: "https://app.otexads.com/reset?token=abc123",
     expiresIn: "1 hour",
+    ipAddress: "102.68.14.22",
   },
 } satisfies TemplateEntry<PasswordResetProps>;
