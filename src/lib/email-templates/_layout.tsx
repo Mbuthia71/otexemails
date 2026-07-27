@@ -100,7 +100,7 @@ export function EmailLayout({
       <Preview>{preview}</Preview>
       <Body
         style={{
-          backgroundColor: "#ffffff",
+          backgroundColor: "#f5f2ec",
           margin: 0,
           padding: 0,
           fontFamily: sans,
@@ -110,39 +110,33 @@ export function EmailLayout({
         <Container
           style={{
             backgroundColor: "#ffffff",
-            maxWidth: "600px",
-            margin: "0 auto",
-            padding: "48px 40px 32px",
+            maxWidth: "620px",
+            margin: "32px auto",
+            padding: "56px 48px 40px",
+            borderRadius: "6px",
+            border: "1px solid #ececec",
           }}
         >
-          {/* Logo */}
+
+          {/* Logo — original wordmark, rendered large and centered */}
           <Section style={{ textAlign: "center", padding: "8px 0 40px" }}>
-            {/*
-              Alt text uses the wordmark styling so that email clients which
-              block images (Outlook desktop, some Gmail configs) still show a
-              recognizable "otexads" wordmark instead of a broken image icon.
-            */}
             <Img
               src={LOGO_URL}
               alt="otexads"
-              width="140"
-              height="40"
+              width="220"
+              height="62"
               style={{
-                display: "inline-block",
+                display: "block",
                 margin: "0 auto",
-                maxWidth: "140px",
-                height: "40px",
-                fontFamily: display,
-                fontSize: "28px",
-                fontWeight: 400,
-                letterSpacing: "0.04em",
-                color: brand.ink,
+                width: "220px",
+                height: "auto",
+                border: "0",
+                outline: "none",
                 textDecoration: "none",
-                lineHeight: "40px",
-                textAlign: "center",
               }}
             />
           </Section>
+
 
           {/* Thin display heading */}
           <Section style={{ textAlign: "center", padding: "0 0 8px" }}>
