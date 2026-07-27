@@ -9,25 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as EmailPreviewRouteImport } from './routes/email-preview'
-import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicEmailRenderRouteImport } from './routes/api/public/email/render'
 
-const GalleryRoute = GalleryRouteImport.update({
-  id: '/gallery',
-  path: '/gallery',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const EmailPreviewRoute = EmailPreviewRouteImport.update({
   id: '/email-preview',
   path: '/email-preview',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CheckoutRoute = CheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -43,79 +31,41 @@ const ApiPublicEmailRenderRoute = ApiPublicEmailRenderRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/checkout': typeof CheckoutRoute
   '/email-preview': typeof EmailPreviewRoute
-  '/gallery': typeof GalleryRoute
   '/api/public/email/render': typeof ApiPublicEmailRenderRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/checkout': typeof CheckoutRoute
   '/email-preview': typeof EmailPreviewRoute
-  '/gallery': typeof GalleryRoute
   '/api/public/email/render': typeof ApiPublicEmailRenderRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/checkout': typeof CheckoutRoute
   '/email-preview': typeof EmailPreviewRoute
-  '/gallery': typeof GalleryRoute
   '/api/public/email/render': typeof ApiPublicEmailRenderRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/checkout'
-    | '/email-preview'
-    | '/gallery'
-    | '/api/public/email/render'
+  fullPaths: '/' | '/email-preview' | '/api/public/email/render'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/checkout'
-    | '/email-preview'
-    | '/gallery'
-    | '/api/public/email/render'
-  id:
-    | '__root__'
-    | '/'
-    | '/checkout'
-    | '/email-preview'
-    | '/gallery'
-    | '/api/public/email/render'
+  to: '/' | '/email-preview' | '/api/public/email/render'
+  id: '__root__' | '/' | '/email-preview' | '/api/public/email/render'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CheckoutRoute: typeof CheckoutRoute
   EmailPreviewRoute: typeof EmailPreviewRoute
-  GalleryRoute: typeof GalleryRoute
   ApiPublicEmailRenderRoute: typeof ApiPublicEmailRenderRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/gallery': {
-      id: '/gallery'
-      path: '/gallery'
-      fullPath: '/gallery'
-      preLoaderRoute: typeof GalleryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/email-preview': {
       id: '/email-preview'
       path: '/email-preview'
       fullPath: '/email-preview'
       preLoaderRoute: typeof EmailPreviewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checkout': {
-      id: '/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -137,9 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CheckoutRoute: CheckoutRoute,
   EmailPreviewRoute: EmailPreviewRoute,
-  GalleryRoute: GalleryRoute,
   ApiPublicEmailRenderRoute: ApiPublicEmailRenderRoute,
 }
 export const routeTree = rootRouteImport
