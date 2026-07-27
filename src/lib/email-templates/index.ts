@@ -10,4 +10,4 @@ TEMPLATES["password-reset"] = passwordReset;
 
 export { TEMPLATES };
 export type { TemplateName, TemplateEntry } from "./registry";
-export { renderTemplate } from "./render";
+export { renderTemplate } from "./render.tsx";
