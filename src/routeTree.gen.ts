@@ -10,12 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as EmailPreviewRouteImport } from './routes/email-preview'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicEmailRenderRouteImport } from './routes/api/public/email/render'
 
 const GalleryRoute = GalleryRouteImport.update({
   id: '/gallery',
   path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmailPreviewRoute = EmailPreviewRouteImport.update({
+  id: '/email-preview',
+  path: '/email-preview',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -28,35 +35,64 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicEmailRenderRoute = ApiPublicEmailRenderRouteImport.update({
+  id: '/api/public/email/render',
+  path: '/api/public/email/render',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/checkout': typeof CheckoutRoute
+  '/email-preview': typeof EmailPreviewRoute
   '/gallery': typeof GalleryRoute
+  '/api/public/email/render': typeof ApiPublicEmailRenderRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/checkout': typeof CheckoutRoute
+  '/email-preview': typeof EmailPreviewRoute
   '/gallery': typeof GalleryRoute
+  '/api/public/email/render': typeof ApiPublicEmailRenderRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/checkout': typeof CheckoutRoute
+  '/email-preview': typeof EmailPreviewRoute
   '/gallery': typeof GalleryRoute
+  '/api/public/email/render': typeof ApiPublicEmailRenderRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/checkout' | '/gallery'
+  fullPaths:
+    | '/'
+    | '/checkout'
+    | '/email-preview'
+    | '/gallery'
+    | '/api/public/email/render'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/checkout' | '/gallery'
-  id: '__root__' | '/' | '/checkout' | '/gallery'
+  to:
+    | '/'
+    | '/checkout'
+    | '/email-preview'
+    | '/gallery'
+    | '/api/public/email/render'
+  id:
+    | '__root__'
+    | '/'
+    | '/checkout'
+    | '/email-preview'
+    | '/gallery'
+    | '/api/public/email/render'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CheckoutRoute: typeof CheckoutRoute
+  EmailPreviewRoute: typeof EmailPreviewRoute
   GalleryRoute: typeof GalleryRoute
+  ApiPublicEmailRenderRoute: typeof ApiPublicEmailRenderRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -66,6 +102,13 @@ declare module '@tanstack/react-router' {
       path: '/gallery'
       fullPath: '/gallery'
       preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/email-preview': {
+      id: '/email-preview'
+      path: '/email-preview'
+      fullPath: '/email-preview'
+      preLoaderRoute: typeof EmailPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -82,13 +125,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/email/render': {
+      id: '/api/public/email/render'
+      path: '/api/public/email/render'
+      fullPath: '/api/public/email/render'
+      preLoaderRoute: typeof ApiPublicEmailRenderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CheckoutRoute: CheckoutRoute,
+  EmailPreviewRoute: EmailPreviewRoute,
   GalleryRoute: GalleryRoute,
+  ApiPublicEmailRenderRoute: ApiPublicEmailRenderRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,3 +1,4 @@
+import { createElement } from "react";
 import { render } from "@react-email/render";
 import { TEMPLATES, type TemplateName } from "./registry";
 
@@ -10,7 +11,7 @@ export async function renderTemplate(
     throw new Error(`Unknown email template: ${name}`);
   }
   const Component = entry.component;
-  return render(<Component {...(data as never)} />);
+  return render(createElement(Component, data));
 }
 
 export type { TemplateName } from "./registry";
