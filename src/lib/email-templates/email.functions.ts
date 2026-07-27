@@ -8,7 +8,7 @@ const inputSchema = z.object({
 });
 
 export const renderEmail = createServerFn({ method: "POST" })
-  .inputValidator((data) => inputSchema.parse(data))
+  .validator((data) => inputSchema.parse(data))
   .handler(async ({ data }) => {
     const html = await renderTemplate(data.template, data.data);
     return { html };
