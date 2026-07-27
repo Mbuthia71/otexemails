@@ -100,7 +100,7 @@ export function EmailLayout({
       <Preview>{preview}</Preview>
       <Body
         style={{
-          backgroundColor: "#ffffff",
+          backgroundColor: "#f5f2ec",
           margin: 0,
           padding: 0,
           fontFamily: sans,
@@ -110,11 +110,14 @@ export function EmailLayout({
         <Container
           style={{
             backgroundColor: "#ffffff",
-            maxWidth: "600px",
-            margin: "0 auto",
-            padding: "48px 40px 32px",
+            maxWidth: "620px",
+            margin: "32px auto",
+            padding: "56px 48px 40px",
+            borderRadius: "6px",
+            border: "1px solid #ececec",
           }}
         >
+
           {/* Logo — original wordmark, rendered large and centered */}
           <Section style={{ textAlign: "center", padding: "8px 0 40px" }}>
             <Img
