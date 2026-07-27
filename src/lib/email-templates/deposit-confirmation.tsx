@@ -1,11 +1,12 @@
-import { Column, Row, Text } from "@react-email/components";
+import { Link, Text } from "@react-email/components";
 import type { TemplateEntry } from "./registry";
 import {
+  DetailRow,
+  DetailTable,
   EmailLayout,
   PillButton,
   StatCard,
   brand,
-  doodle,
   styles,
 } from "./_layout";
 
@@ -33,76 +34,51 @@ export default function DepositConfirmationEmail({
   return (
     <EmailLayout
       preview={`Deposit of ${amount} confirmed — ref ${reference}.`}
+      heading="Deposit Received"
       accent={brand.accent}
-      eyebrow="deposit confirmed"
       footerNote="You received this because a deposit was made to your OtexAds advertiser wallet."
-      doodles={
-        <>
-          {doodle.coin(brand.accent)}
-          {doodle.arrowSW}
-          {doodle.spark}
-          {doodle.dot}
-        </>
-      }
-      hero={
-        <>
-          Wallet, <span style={{ fontStyle: "italic" }}>topped up.</span>
-        </>
-      }
     >
-      <Text style={styles.lede}>
-        Hey {name} — we caught your {method} payment and dropped it straight
-        into your advertiser wallet. Your campaigns are ready to roll.
+      <Text style={styles.greet}>Hi {name},</Text>
+
+      <Text style={styles.p}>
+        We've received your payment via {method} and topped up your OtexAds
+        advertiser wallet. Your campaigns are ready to run.
       </Text>
 
-      <StatCard
-        label="amount deposited"
-        value={amount}
-        accent={brand.accent}
-        soft={brand.accentSoft}
-      />
+      <StatCard label="Amount deposited" value={amount} accent={brand.accent} />
 
-      <Row style={{ margin: "8px 0" }}>
-        <Column style={{ paddingBottom: 16, width: "50%" }}>
-          <Text style={styles.metaLabel}>Reference</Text>
-          <Text style={styles.meta}>{reference}</Text>
-        </Column>
-        <Column style={{ paddingBottom: 16, width: "50%" }}>
-          <Text style={styles.metaLabel}>Method</Text>
-          <Text style={styles.meta}>{method}</Text>
-        </Column>
-      </Row>
-      <Row>
-        <Column style={{ paddingBottom: 16, width: "50%" }}>
-          <Text style={styles.metaLabel}>Paid at</Text>
-          <Text style={styles.meta}>{paidAt}</Text>
-        </Column>
-        <Column style={{ paddingBottom: 16, width: "50%" }}>
-          <Text style={styles.metaLabel}>Currency</Text>
-          <Text style={styles.meta}>{currency}</Text>
-        </Column>
-      </Row>
+      <DetailTable>
+        <DetailRow label="Reference" value={reference} />
+        <DetailRow label="Method" value={method} />
+        <DetailRow label="Currency" value={currency} />
+        <DetailRow label="Paid at" value={paidAt} />
+        <DetailRow
+          label="New wallet balance"
+          value={<strong>{newBalance}</strong>}
+        />
+      </DetailTable>
 
-      <hr style={styles.hr} />
+      <Text style={styles.p}>
+        Keep this email as your receipt. You can also download a PDF invoice
+        from the{" "}
+        <Link href={dashboardUrl} style={styles.link}>
+          wallet page
+        </Link>
+        .
+      </Text>
 
-      <Row>
-        <Column style={{ width: "60%" }}>
-          <Text style={styles.metaLabel}>New wallet balance</Text>
-          <Text style={{ ...styles.amount, fontSize: 26 }}>{newBalance}</Text>
-        </Column>
-        <Column align="right" style={{ width: "40%" }}>
-          <PillButton href={dashboardUrl} color={brand.accent}>
-            Open wallet
-          </PillButton>
-        </Column>
-      </Row>
+      <div style={{ textAlign: "center", margin: "28px 0 8px" }}>
+        <PillButton href={dashboardUrl} color={brand.ink}>
+          Open wallet
+        </PillButton>
+      </div>
     </EmailLayout>
   );
 }
 
 export const template = {
   component: DepositConfirmationEmail,
-  subject: "Deposit confirmed — OtexAds wallet topped up",
+  subject: "Deposit received — OtexAds wallet topped up",
   displayName: "Deposit Confirmation",
   previewData: {
     name: "Aisha",

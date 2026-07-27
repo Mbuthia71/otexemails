@@ -1,69 +1,64 @@
-import { Text } from "@react-email/components";
+import { Link, Text } from "@react-email/components";
 import type { TemplateEntry } from "./registry";
-import { EmailLayout, PillButton, brand, doodle, styles } from "./_layout";
+import { EmailLayout, PillButton, brand, styles } from "./_layout";
 
 interface WelcomeProps {
   name?: string;
+  email?: string;
   role?: "advertiser" | "publisher";
   dashboardUrl?: string;
+  verifyUrl?: string;
 }
 
 export default function WelcomeEmail({
   name = "there",
+  email = "you@example.com",
   role = "advertiser",
   dashboardUrl = "https://app.otexads.com",
+  verifyUrl = "https://app.otexads.com/verify?token=xxx",
 }: WelcomeProps) {
-  const roleCopy =
+  const roleLine =
     role === "publisher"
-      ? "Add your first ad slot, generate your tag, and start earning from day one — payouts land in M-Pesa or bank once you cross the threshold."
-      : "Fund your wallet, launch your first campaign, and reach quality publishers instantly — no middleman noise, no dark inventory.";
+      ? "As a publisher, you can add ad slots, generate your tag, and start earning right away. Payouts land in M-Pesa or bank as soon as you cross the KSh 3,000 threshold."
+      : "As an advertiser, you can fund your wallet via Paystack, launch a campaign in minutes, and reach vetted publishers across Kenya and East Africa.";
 
   return (
     <EmailLayout
       preview={`Welcome to OtexAds, ${name}.`}
+      heading="Welcome!"
       accent={brand.accent}
-      doodles={
-        <>
-          {doodle.arrowLeft}
-          {doodle.wave}
-          {doodle.spark}
-          {doodle.arrowSW}
-          {doodle.cursor}
-        </>
-      }
-      hero={
-        <>
-          Hello,{" "}
-          <span style={{ fontStyle: "italic", color: brand.accent }}>
-            {name}.
-          </span>
-        </>
-      }
     >
-      <Text style={styles.lede}>
-        Nobody clicks "sign up" hoping for a boring welcome email. So —
-        welcome to the good side of ad-tech. Clean tracking, transparent
-        payouts, real humans on support.
-      </Text>
-      <Text style={styles.p}>{roleCopy}</Text>
+      <Text style={styles.greet}>Hi {name},</Text>
 
-      <div style={{ textAlign: "center", margin: "36px 0 8px" }}>
-        <PillButton href={dashboardUrl} color={brand.accent}>
-          Open the dashboard →
+      <Text style={styles.p}>
+        You have successfully created your OtexAds account with the following
+        email address:{" "}
+        <Link href={`mailto:${email}`} style={styles.link}>
+          {email}
+        </Link>
+        . In order to access all areas of the platform you must activate your
+        account by clicking{" "}
+        <Link href={verifyUrl} style={styles.link}>
+          here
+        </Link>
+        .
+      </Text>
+
+      <Text style={styles.p}>{roleLine}</Text>
+
+      <Text style={styles.p}>
+        If you have any questions, just reply to this email or write to{" "}
+        <Link href="mailto:support@otexads.com" style={styles.link}>
+          support@otexads.com
+        </Link>
+        . We read every message.
+      </Text>
+
+      <div style={{ textAlign: "center", margin: "34px 0 8px" }}>
+        <PillButton href={dashboardUrl} color={brand.ink}>
+          Open dashboard
         </PillButton>
       </div>
-
-      <Text
-        style={{
-          ...styles.p,
-          marginTop: 28,
-          color: brand.muted,
-          fontSize: 13,
-          textAlign: "center",
-        }}
-      >
-        Questions? Just reply — a real teammate reads every message.
-      </Text>
     </EmailLayout>
   );
 }
@@ -74,7 +69,9 @@ export const template = {
   displayName: "Welcome",
   previewData: {
     name: "Aisha",
+    email: "aisha.k@example.com",
     role: "advertiser",
     dashboardUrl: "https://app.otexads.com",
+    verifyUrl: "https://app.otexads.com/verify?token=abc123",
   },
 } satisfies TemplateEntry<WelcomeProps>;
