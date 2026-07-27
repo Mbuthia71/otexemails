@@ -1,6 +1,13 @@
-import { Button, Column, Hr, Row, Section, Text } from "@react-email/components";
+import { Column, Row, Text } from "@react-email/components";
 import type { TemplateEntry } from "./registry";
-import { EmailLayout, brand, styles } from "./_layout";
+import {
+  EmailLayout,
+  PillButton,
+  StatCard,
+  brand,
+  doodle,
+  styles,
+} from "./_layout";
 
 interface PayoutPendingApprovalProps {
   adminName?: string;
@@ -28,64 +35,81 @@ export default function PayoutPendingApprovalEmail({
   return (
     <EmailLayout
       preview={`Payout of ${amount} awaiting your approval for ${publisherName}.`}
+      accent={brand.warn}
+      eyebrow="pending approval"
       footerNote="You received this because you are an OtexAds admin with payout approval permissions."
+      doodles={
+        <>
+          {doodle.bell(brand.warn)}
+          {doodle.arrowSW}
+          {doodle.dot}
+          {doodle.cursor}
+        </>
+      }
+      hero={
+        <>
+          Your turn,{" "}
+          <span style={{ fontStyle: "italic", color: brand.warn }}>
+            {adminName}.
+          </span>
+        </>
+      }
     >
-      <Text style={{ ...styles.eyebrow, color: brand.warn }}>Pending approval</Text>
-      <Text style={styles.h1}>Publisher payout awaiting review.</Text>
-      <Text style={styles.p}>
-        Hi {adminName}, <strong>{publisherName}</strong> has crossed the{" "}
-        {threshold} payout threshold and their earnings are ready for approval.
-        Please review and approve or hold this payout.
+      <Text style={styles.lede}>
+        <strong>{publisherName}</strong> just crossed the {threshold} payout
+        threshold. Fraud checks passed, auto-holds are clear — the only thing
+        left is a human tap.
       </Text>
 
-      <Section
-        style={{
-          backgroundColor: "#fef3c7",
-          border: `1px solid #fcd34d`,
-          borderRadius: "10px",
-          padding: "20px 22px",
-          margin: "24px 0",
-        }}
-      >
-        <Text style={{ ...styles.metaLabel, color: brand.warn }}>
-          Payout amount
-        </Text>
-        <Text style={{ ...styles.amount, color: brand.warn }}>{amount}</Text>
-      </Section>
+      <StatCard
+        label="payout amount"
+        value={amount}
+        accent={brand.warn}
+        soft={brand.warnSoft}
+      />
 
       <Row>
-        <Column style={{ paddingBottom: 14 }}>
+        <Column style={{ paddingBottom: 16, width: "50%" }}>
           <Text style={styles.metaLabel}>Publisher</Text>
           <Text style={styles.meta}>{publisherName}</Text>
-          <Text style={{ ...styles.meta, color: brand.muted }}>{publisherEmail}</Text>
+          <Text style={{ ...styles.meta, color: brand.muted }}>
+            {publisherEmail}
+          </Text>
         </Column>
-        <Column style={{ paddingBottom: 14 }}>
+        <Column style={{ paddingBottom: 16, width: "50%" }}>
           <Text style={styles.metaLabel}>Requested at</Text>
           <Text style={styles.meta}>{requestedAt}</Text>
         </Column>
       </Row>
       <Row>
-        <Column style={{ paddingBottom: 14 }}>
+        <Column style={{ paddingBottom: 16, width: "50%" }}>
           <Text style={styles.metaLabel}>Method</Text>
           <Text style={styles.meta}>{method}</Text>
         </Column>
-        <Column style={{ paddingBottom: 14 }}>
+        <Column style={{ paddingBottom: 16, width: "50%" }}>
           <Text style={styles.metaLabel}>Destination</Text>
           <Text style={styles.meta}>{destination}</Text>
         </Column>
       </Row>
 
-      <Hr style={styles.hr} />
+      <hr style={styles.hr} />
 
-      <Section>
-        <Button href={reviewUrl} style={styles.button()}>
-          Review payout
-        </Button>
-      </Section>
+      <div style={{ textAlign: "center" }}>
+        <PillButton href={reviewUrl} color={brand.ink}>
+          Review payout →
+        </PillButton>
+      </div>
 
-      <Text style={{ ...styles.p, marginTop: 20, color: brand.muted, fontSize: 13 }}>
-        Auto-hold rules and fraud checks have already run — this payout passed
-        all automated screens and is waiting only on human approval.
+      <Text
+        style={{
+          ...styles.p,
+          marginTop: 22,
+          color: brand.muted,
+          fontSize: 13,
+          textAlign: "center",
+        }}
+      >
+        Automated screens already ran. This one just needs eyes on it.
       </Text>
     </EmailLayout>
   );

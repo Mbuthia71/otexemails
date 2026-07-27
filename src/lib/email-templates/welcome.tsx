@@ -1,6 +1,6 @@
-import { Button, Section, Text } from "@react-email/components";
+import { Text } from "@react-email/components";
 import type { TemplateEntry } from "./registry";
-import { EmailLayout, brand, styles } from "./_layout";
+import { EmailLayout, PillButton, brand, doodle, styles } from "./_layout";
 
 interface WelcomeProps {
   name?: string;
@@ -15,26 +15,54 @@ export default function WelcomeEmail({
 }: WelcomeProps) {
   const roleCopy =
     role === "publisher"
-      ? "Add your first ad slot, generate your tag, and start earning from day one."
-      : "Fund your wallet, launch your first campaign, and reach quality publishers instantly.";
+      ? "Add your first ad slot, generate your tag, and start earning from day one — payouts land in M-Pesa or bank once you cross the threshold."
+      : "Fund your wallet, launch your first campaign, and reach quality publishers instantly — no middleman noise, no dark inventory.";
 
   return (
-    <EmailLayout preview={`Welcome to OtexAds, ${name}.`}>
-      <Text style={styles.eyebrow}>Welcome</Text>
-      <Text style={styles.h1}>You're in, {name}.</Text>
-      <Text style={styles.p}>
-        OtexAds connects advertisers with quality publishers — clean tracking,
-        transparent payouts, no middleman noise. {roleCopy}
+    <EmailLayout
+      preview={`Welcome to OtexAds, ${name}.`}
+      accent={brand.accent}
+      doodles={
+        <>
+          {doodle.arrowLeft}
+          {doodle.wave}
+          {doodle.spark}
+          {doodle.arrowSW}
+          {doodle.cursor}
+        </>
+      }
+      hero={
+        <>
+          Hello,{" "}
+          <span style={{ fontStyle: "italic", color: brand.accent }}>
+            {name}.
+          </span>
+        </>
+      }
+    >
+      <Text style={styles.lede}>
+        Nobody clicks "sign up" hoping for a boring welcome email. So —
+        welcome to the good side of ad-tech. Clean tracking, transparent
+        payouts, real humans on support.
       </Text>
+      <Text style={styles.p}>{roleCopy}</Text>
 
-      <Section style={{ margin: "28px 0 8px" }}>
-        <Button href={dashboardUrl} style={styles.button()}>
-          Open your dashboard
-        </Button>
-      </Section>
+      <div style={{ textAlign: "center", margin: "36px 0 8px" }}>
+        <PillButton href={dashboardUrl} color={brand.accent}>
+          Open the dashboard →
+        </PillButton>
+      </div>
 
-      <Text style={{ ...styles.p, marginTop: 24, color: brand.muted, fontSize: 13 }}>
-        Questions? Just reply to this email — a real human on our team will read it.
+      <Text
+        style={{
+          ...styles.p,
+          marginTop: 28,
+          color: brand.muted,
+          fontSize: 13,
+          textAlign: "center",
+        }}
+      >
+        Questions? Just reply — a real teammate reads every message.
       </Text>
     </EmailLayout>
   );

@@ -1,6 +1,13 @@
-import { Button, Column, Hr, Row, Section, Text } from "@react-email/components";
+import { Column, Row, Text } from "@react-email/components";
 import type { TemplateEntry } from "./registry";
-import { EmailLayout, brand, styles } from "./_layout";
+import {
+  EmailLayout,
+  PillButton,
+  StatCard,
+  brand,
+  doodle,
+  styles,
+} from "./_layout";
 
 interface PayoutSentProps {
   name?: string;
@@ -26,59 +33,66 @@ export default function PayoutSentEmail({
   return (
     <EmailLayout
       preview={`Payout of ${amount} sent to ${destination}.`}
+      accent={brand.success}
+      eyebrow="payout sent"
       footerNote="You received this because a publisher payout was processed from your OtexAds account."
+      doodles={
+        <>
+          {doodle.checkCircle(brand.success)}
+          {doodle.arrowRight}
+          {doodle.spark}
+          {doodle.wave}
+        </>
+      }
+      hero={
+        <>
+          Money is on its{" "}
+          <span style={{ fontStyle: "italic", color: brand.success }}>
+            way.
+          </span>
+        </>
+      }
     >
-      <Text style={{ ...styles.eyebrow, color: brand.success }}>Payout sent</Text>
-      <Text style={styles.h1}>Your earnings are on the way.</Text>
-      <Text style={styles.p}>
-        Nice work, {name}. We've sent your OtexAds publisher earnings for{" "}
-        {period}. Funds typically arrive within a few minutes for M-Pesa and
-        within 1 business day for bank transfers.
+      <Text style={styles.lede}>
+        Nice work, {name}. Your OtexAds earnings for {period} are out the door.
+        M-Pesa usually lands in minutes; bank transfers within one business day.
       </Text>
 
-      <Section
-        style={{
-          backgroundColor: "#ecfdf5",
-          border: `1px solid #a7f3d0`,
-          borderRadius: "10px",
-          padding: "20px 22px",
-          margin: "24px 0",
-        }}
-      >
-        <Text style={{ ...styles.metaLabel, color: brand.success }}>
-          Amount sent
-        </Text>
-        <Text style={{ ...styles.amount, color: brand.success }}>{amount}</Text>
-      </Section>
+      <StatCard
+        label="amount sent"
+        value={amount}
+        accent={brand.success}
+        soft={brand.successSoft}
+      />
 
       <Row>
-        <Column style={{ paddingBottom: 14 }}>
+        <Column style={{ paddingBottom: 16, width: "50%" }}>
           <Text style={styles.metaLabel}>Reference</Text>
           <Text style={styles.meta}>{reference}</Text>
         </Column>
-        <Column style={{ paddingBottom: 14 }}>
+        <Column style={{ paddingBottom: 16, width: "50%" }}>
           <Text style={styles.metaLabel}>Method</Text>
           <Text style={styles.meta}>{method}</Text>
         </Column>
       </Row>
       <Row>
-        <Column style={{ paddingBottom: 14 }}>
+        <Column style={{ paddingBottom: 16, width: "50%" }}>
           <Text style={styles.metaLabel}>Destination</Text>
           <Text style={styles.meta}>{destination}</Text>
         </Column>
-        <Column style={{ paddingBottom: 14 }}>
+        <Column style={{ paddingBottom: 16, width: "50%" }}>
           <Text style={styles.metaLabel}>Sent at</Text>
           <Text style={styles.meta}>{sentAt}</Text>
         </Column>
       </Row>
 
-      <Hr style={styles.hr} />
+      <hr style={styles.hr} />
 
-      <Section>
-        <Button href={dashboardUrl} style={styles.button(brand.success)}>
+      <div style={{ textAlign: "center" }}>
+        <PillButton href={dashboardUrl} color={brand.success}>
           View payout history
-        </Button>
-      </Section>
+        </PillButton>
+      </div>
     </EmailLayout>
   );
 }

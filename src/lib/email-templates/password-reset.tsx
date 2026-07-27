@@ -1,6 +1,6 @@
-import { Button, Section, Text } from "@react-email/components";
+import { Text } from "@react-email/components";
 import type { TemplateEntry } from "./registry";
-import { EmailLayout, brand, styles } from "./_layout";
+import { EmailLayout, PillButton, brand, doodle, styles } from "./_layout";
 
 interface PasswordResetProps {
   resetUrl?: string;
@@ -14,34 +14,72 @@ export default function PasswordResetEmail({
   ipAddress,
 }: PasswordResetProps) {
   return (
-    <EmailLayout preview="Reset your OtexAds password.">
-      <Text style={styles.eyebrow}>Password reset</Text>
-      <Text style={styles.h1}>Reset your password</Text>
-      <Text style={styles.p}>
-        We received a request to reset your OtexAds password. Click the button
-        below to choose a new one. This link expires in {expiresIn}.
+    <EmailLayout
+      preview="Reset your OtexAds password."
+      accent={brand.ink}
+      eyebrow="password reset"
+      doodles={
+        <>
+          {doodle.lock}
+          {doodle.arrowSW}
+          {doodle.dot}
+        </>
+      }
+      hero={
+        <>
+          Forgot it?{" "}
+          <span style={{ fontStyle: "italic" }}>Happens.</span>
+        </>
+      }
+    >
+      <Text style={styles.lede}>
+        Somebody (hopefully you) asked to reset the password on this OtexAds
+        account. Tap below to pick a new one. The link is good for {expiresIn}.
       </Text>
 
-      <Section style={{ margin: "28px 0" }}>
-        <Button href={resetUrl} style={styles.button()}>
+      <div style={{ textAlign: "center", margin: "36px 0 12px" }}>
+        <PillButton href={resetUrl} color={brand.ink}>
           Reset password
-        </Button>
-      </Section>
+        </PillButton>
+      </div>
 
-      <Text style={{ ...styles.meta, wordBreak: "break-all" }}>
-        Or paste this URL into your browser:
+      <Text
+        style={{
+          ...styles.meta,
+          wordBreak: "break-all",
+          textAlign: "center",
+          marginTop: 22,
+          color: brand.muted,
+        }}
+      >
+        Or copy this URL:
         <br />
-        <span style={{ color: brand.accent }}>{resetUrl}</span>
+        <span style={{ color: brand.ink }}>{resetUrl}</span>
       </Text>
 
       {ipAddress ? (
-        <Text style={{ ...styles.meta, marginTop: 20 }}>
-          Request originated from IP <strong>{ipAddress}</strong>.
+        <Text
+          style={{
+            ...styles.meta,
+            marginTop: 20,
+            textAlign: "center",
+            color: brand.muted,
+          }}
+        >
+          Request seen from IP <strong>{ipAddress}</strong>.
         </Text>
       ) : null}
 
-      <Text style={{ ...styles.p, marginTop: 24, color: brand.muted, fontSize: 13 }}>
-        Didn't request this? Ignore this email — your password won't change.
+      <Text
+        style={{
+          ...styles.p,
+          marginTop: 26,
+          color: brand.muted,
+          fontSize: 13,
+          textAlign: "center",
+        }}
+      >
+        Didn't request this? Ignore it — your password stays as it is.
       </Text>
     </EmailLayout>
   );
