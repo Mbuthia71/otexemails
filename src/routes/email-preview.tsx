@@ -86,16 +86,22 @@ function EmailPreview() {
         </aside>
 
         <main className="space-y-4">
-          <div className="flex items-baseline justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
               <div className="text-xs uppercase tracking-wider text-zinc-500">
                 Subject
               </div>
-              <h2 className="text-xl font-semibold mt-0.5">{activeMeta.subject}</h2>
+              <h2 className="text-xl font-semibold mt-0.5 truncate">
+                {activeMeta.subject}
+              </h2>
             </div>
-            {loading ? (
-              <span className="text-xs text-zinc-500">Rendering…</span>
-            ) : null}
+            <div className="flex items-center gap-2 shrink-0">
+              {loading ? (
+                <span className="text-xs text-zinc-500">Rendering…</span>
+              ) : null}
+              <CopyButton label="Copy subject" value={activeMeta.subject} />
+              <CopyButton label="Copy HTML" value={html} disabled={!html} />
+            </div>
           </div>
 
           <div className="rounded-xl border border-zinc-200 bg-white overflow-hidden">
