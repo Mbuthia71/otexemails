@@ -23,6 +23,42 @@ const templateList = (Object.keys(TEMPLATES) as TemplateName[]).map((name) => ({
   subject: TEMPLATES[name].subject,
 }));
 
+function CopyButton({
+  label,
+  value,
+  disabled,
+}: {
+  label: string;
+  value: string;
+  disabled?: boolean;
+}) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(value);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1400);
+        } catch {
+          /* ignore */
+        }
+      }}
+      className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+        disabled
+          ? "border-zinc-200 text-zinc-400 cursor-not-allowed"
+          : copied
+            ? "bg-emerald-600 text-white border-emerald-600"
+            : "bg-white text-zinc-800 border-zinc-300 hover:bg-zinc-100"
+      }`}
+    >
+      {copied ? "Copied" : label}
+    </button>
+  );
+}
+
 function EmailPreview() {
   const [active, setActive] = useState<TemplateName>("welcome");
   const [html, setHtml] = useState<string>("");
