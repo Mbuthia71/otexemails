@@ -1,6 +1,13 @@
-import { Button, Section, Text } from "@react-email/components";
+import { Text } from "@react-email/components";
 import type { TemplateEntry } from "./registry";
-import { EmailLayout, brand, styles } from "./_layout";
+import {
+  EmailLayout,
+  PillButton,
+  StatCard,
+  brand,
+  doodle,
+  styles,
+} from "./_layout";
 
 interface LowBalanceProps {
   name?: string;
@@ -20,41 +27,57 @@ export default function LowBalanceEmail({
   return (
     <EmailLayout
       preview={`Low balance: ${currentBalance} left in your OtexAds wallet.`}
-      footerNote="You received this alert because your wallet fell below your low-balance threshold."
+      accent={brand.warn}
+      eyebrow="heads up"
+      footerNote="You received this because your wallet fell below your low-balance threshold."
+      doodles={
+        <>
+          {doodle.warnTri(brand.warn)}
+          {doodle.arrowSW}
+          {doodle.bell(brand.warn)}
+          {doodle.dot}
+        </>
+      }
+      hero={
+        <>
+          Running{" "}
+          <span style={{ fontStyle: "italic", color: brand.warn }}>
+            low.
+          </span>
+        </>
+      }
     >
-      <Text style={{ ...styles.eyebrow, color: brand.warn }}>Low balance alert</Text>
-      <Text style={styles.h1}>Your wallet is running low.</Text>
-      <Text style={styles.p}>
-        Hi {name}, your OtexAds advertiser wallet has dropped below your{" "}
-        <strong>{threshold}</strong> threshold. At the current spend rate, your
-        active campaigns will pause in <strong>{estimatedRunout}</strong> if you
-        don't top up.
+      <Text style={styles.lede}>
+        Hi {name} — your advertiser wallet just dropped under your{" "}
+        <strong>{threshold}</strong> threshold. At the current spend rate,
+        active campaigns will pause in <strong>{estimatedRunout}</strong>{" "}
+        unless you top up.
       </Text>
 
-      <Section
+      <StatCard
+        label="current balance"
+        value={currentBalance}
+        accent={brand.warn}
+        soft={brand.warnSoft}
+      />
+
+      <div style={{ textAlign: "center", margin: "24px 0 8px" }}>
+        <PillButton href={topUpUrl} color={brand.warn}>
+          Top up wallet →
+        </PillButton>
+      </div>
+
+      <Text
         style={{
-          backgroundColor: "#fff7ed",
-          border: `1px solid #fed7aa`,
-          borderRadius: "10px",
-          padding: "20px 22px",
-          margin: "24px 0",
+          ...styles.p,
+          marginTop: 24,
+          color: brand.muted,
+          fontSize: 13,
+          textAlign: "center",
         }}
       >
-        <Text style={{ ...styles.metaLabel, color: brand.warn }}>
-          Current balance
-        </Text>
-        <Text style={{ ...styles.amount, color: brand.warn }}>{currentBalance}</Text>
-      </Section>
-
-      <Section style={{ margin: "24px 0 8px" }}>
-        <Button href={topUpUrl} style={styles.button(brand.warn)}>
-          Top up wallet
-        </Button>
-      </Section>
-
-      <Text style={{ ...styles.p, marginTop: 20, color: brand.muted, fontSize: 13 }}>
-        Deposits via Paystack (card, M-Pesa, bank transfer) are credited
-        instantly and your campaigns resume automatically.
+        Paystack (card · M-Pesa · bank) credits instantly. Campaigns resume
+        automatically the moment funds land.
       </Text>
     </EmailLayout>
   );
