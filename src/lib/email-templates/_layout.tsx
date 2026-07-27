@@ -117,16 +117,29 @@ export function EmailLayout({
         >
           {/* Logo */}
           <Section style={{ textAlign: "center", padding: "8px 0 40px" }}>
+            {/*
+              Alt text uses the wordmark styling so that email clients which
+              block images (Outlook desktop, some Gmail configs) still show a
+              recognizable "otexads" wordmark instead of a broken image icon.
+            */}
             <Img
               src={LOGO_URL}
-              alt="OtexAds"
+              alt="otexads"
               width="140"
-              height="auto"
+              height="40"
               style={{
                 display: "inline-block",
                 margin: "0 auto",
                 maxWidth: "140px",
-                height: "auto",
+                height: "40px",
+                fontFamily: display,
+                fontSize: "28px",
+                fontWeight: 400,
+                letterSpacing: "0.04em",
+                color: brand.ink,
+                textDecoration: "none",
+                lineHeight: "40px",
+                textAlign: "center",
               }}
             />
           </Section>
